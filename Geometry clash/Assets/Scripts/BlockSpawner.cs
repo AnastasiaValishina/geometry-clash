@@ -3,37 +3,69 @@ using UnityEngine;
 public class BlockSpawner : MonoBehaviour
 {
     [SerializeField] Block blockPrefab;
-    [SerializeField] GameObject markPrefab;
-    [SerializeField] Transform blockContainer;
+    [SerializeField] Marker markerPrefab;
     [SerializeField] int numberOfBlocks;
 
     Grid grid;
+ 
     private void Start()
     {
         grid = GetComponent<Grid>();
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
-            Spawn();
+            MoveAllBlocks();
+            MakeBlocks();
+            SpawnMarkers();
         }
     }
 
-    private void Spawn()
+    private void SpawnMarkers()
     {
         int counter = 0;
         while (counter < numberOfBlocks)
         {
             int randomX = Random.Range(0, grid.width);
             int randomY = Random.Range(0, grid.height);
-            if (grid.PositionOnBoardExists(randomX, randomY))
+            if (grid.squares[randomX, randomY] == null)
             {
-                Vector2 blockPos = new Vector2(randomX, randomY);
-                Block block = Instantiate(blockPrefab, blockPos, Quaternion.identity);
-                grid.squares[randomX, randomY] = block;
-                block.transform.parent = blockContainer;
+                Vector2 markerPos = new Vector2(randomX, randomY);
+                Marker marker = Instantiate(markerPrefab, markerPos, Quaternion.identity);
+                grid.squares[randomX, randomY] = marker;
+                marker.posX = randomX;
+                marker.posY = randomY;
+                marker.transform.parent = transform;
                 counter++;
+            }
+        }
+    }
+
+    private void MakeBlocks()
+    {
+        foreach (Square square in grid.squares)
+        {
+            if (square == null) continue;
+            if (square is Marker)
+            {
+                Vector2 blockPos = new Vector2(square.posX, square.posY);
+                Block block = Instantiate(blockPrefab, blockPos, Quaternion.identity);
+                block.posX = square.posX;
+                block.posY = square.posY;
+                grid.squares[square.posX, square.posY] = block;
+                Destroy(square.gameObject);
+            }
+        }
+    }
+
+    private void MoveAllBlocks()
+    {
+        foreach (Square square in grid.squares)
+        {
+            if (square is Block)
+            {
+                square.GetComponent<Block>().MakeRandomMove();
             }
         }
     }

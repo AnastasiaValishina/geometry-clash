@@ -183,10 +183,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 4716246823129187973, guid: 5dce946061b02e7458606bbf62cb1991,
     type: 3}
-  markPrefab: {fileID: 3982898559867826131, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
+  markerPrefab: {fileID: 2409847352698345950, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
     type: 3}
-  blockContainer: {fileID: 261837876}
-  numberOfBlocks: 2
+  numberOfBlocks: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
