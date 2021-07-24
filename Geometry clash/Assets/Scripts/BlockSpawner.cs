@@ -6,17 +6,16 @@ public class BlockSpawner : MonoBehaviour
     [SerializeField] Marker markerPrefab;
     [SerializeField] int numberOfBlocks;
 
-    Grid grid;
+    GameField grid;
  
     private void Start()
     {
-        grid = GetComponent<Grid>();
+        grid = GetComponent<GameField>();
     }
     void Update()
     {
         if (Input.GetMouseButtonUp(0))
         {
-            MoveAllBlocks();
             MakeBlocks();
             SpawnMarkers();
         }
@@ -55,17 +54,6 @@ public class BlockSpawner : MonoBehaviour
                 block.posY = square.posY;
                 grid.squares[square.posX, square.posY] = block;
                 Destroy(square.gameObject);
-            }
-        }
-    }
-
-    private void MoveAllBlocks()
-    {
-        foreach (Square square in grid.squares)
-        {
-            if (square is Block)
-            {
-                square.GetComponent<Block>().MakeRandomMove();
             }
         }
     }

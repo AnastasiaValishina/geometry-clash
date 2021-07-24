@@ -10,44 +10,75 @@ public enum BlockType
 
 public class Block : Square
 {
-    Grid grid;
+    GameField gameField;
     public BlockType blockType;
+    public bool isDebug = false;
 
     void Start()
     {
-        blockType = BlockType.Leading;
-        grid = FindObjectOfType<Grid>();
+        gameField = FindObjectOfType<GameField>();
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
-          //  if (blockType == BlockType.Leading)
-        //    {
-        //        MakeRandomMove();
-            //}
+            MakeRandomMove();
         }
     }
 
     public void MakeRandomMove()
     {
-        var moves = grid.FindPossibleMovesFor(posX, posY);
-        if (moves == null) return;
-        
-            int randomIndex = Random.Range(0, moves.Count);
-            grid.SetPositionEmpty(posX, posY);
-            posX = moves[randomIndex].posX;
-            posY = moves[randomIndex].posY;
+        var possibleMoves = new List<PossibleMove>();
+        if (CheckMove(posX - 1, posY))
+        {
+            possibleMoves.Add(CreatePosibleMoves(posX - 1, posY));
+        }
+        if (CheckMove(posX + 1, posY))
+        {
+            possibleMoves.Add(CreatePosibleMoves(posX + 1, posY));
+        }
+        if (CheckMove(posX, posY + 1))
+        {
+            possibleMoves.Add(CreatePosibleMoves(posX, posY + 1));
+        }
+        if (CheckMove(posX, posY - 1))
+        {
+            possibleMoves.Add(CreatePosibleMoves(posX, posY - 1));
+        }
+
+        if (possibleMoves != null)
+        {
+            int randomIndex = Random.Range(0, possibleMoves.Count);
+            gameField.SetPositionEmpty(posX, posY);
+            posX = possibleMoves[randomIndex].posX;
+            posY = possibleMoves[randomIndex].posY;
+            foreach (var move in possibleMoves)
+            {
+                Destroy(move.gameObject);
+            }
+            possibleMoves.Clear();
             transform.position = new Vector2(posX, posY);
-            grid.squares[posX, posY] = this;
-        
+            Debug.Log("to " + posX + ", " + posY);
+            gameField.squares[posX, posY] = this;
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private bool CheckMove(int x, int y)
     {
-        if (other.GetComponent<Block>().blockType == BlockType.Leading)
+        if (gameField.PositionOnBoardExists(x, y) && gameField.squares[x, y] == null)
         {
-            other.GetComponent<Block>().blockType = BlockType.Folowing;
+            Debug.Log(x + ", " + y + " should be true " + gameField.PositionOnBoardExists(x, y));
+            return true;
         }
+        return false;
+    }
+    private PossibleMove CreatePosibleMoves(int x, int y)
+    {
+        Vector2 position = new Vector2(x, y);
+        PossibleMove possibleMove = Instantiate(gameField.possibleMovePrefab, position, Quaternion.identity);
+        possibleMove.posX = x;
+        possibleMove.posY = y;
+        Debug.Log(possibleMove.posX + ", " + possibleMove.posY + " is written to Possible Moves");
+        return possibleMove;
     }
 }

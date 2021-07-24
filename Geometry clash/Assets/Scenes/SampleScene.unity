@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 261837875}
   - component: {fileID: 261837877}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: GameField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,11 +150,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 261837874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a3c5b221ca3ce84f86481c0423ad9d6, type: 3}
+  m_Script: {fileID: 11500000, guid: 67befc15b38c2084cbfd4ef81755d9e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   width: 9
   height: 19
+  possibleMovePrefab: {fileID: 2846053081504668632, guid: c1c23e10732d86b4f92e7b3ebf1e2dd5,
+    type: 3}
+  gameState: 0
 --- !u!4 &261837876
 Transform:
   m_ObjectHideFlags: 0
