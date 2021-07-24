@@ -29,24 +29,20 @@ public class Block : Square
     public void MakeRandomMove()
     {
         var possibleMoves = new List<PossibleMove>();
-        if (CheckMove(posX - 1, posY))
-        {
+        if (CheckMove(posX - 1, posY)) {
             possibleMoves.Add(CreatePosibleMoves(posX - 1, posY));
         }
-        if (CheckMove(posX + 1, posY))
-        {
+        if (CheckMove(posX + 1, posY)) {
             possibleMoves.Add(CreatePosibleMoves(posX + 1, posY));
         }
-        if (CheckMove(posX, posY + 1))
-        {
+        if (CheckMove(posX, posY + 1)) {
             possibleMoves.Add(CreatePosibleMoves(posX, posY + 1));
         }
-        if (CheckMove(posX, posY - 1))
-        {
+        if (CheckMove(posX, posY - 1)) {
             possibleMoves.Add(CreatePosibleMoves(posX, posY - 1));
         }
 
-        if (possibleMoves != null)
+        if (possibleMoves.Count > 0)
         {
             int randomIndex = Random.Range(0, possibleMoves.Count);
             gameField.SetPositionEmpty(posX, posY);
@@ -58,7 +54,6 @@ public class Block : Square
             }
             possibleMoves.Clear();
             transform.position = new Vector2(posX, posY);
-            Debug.Log("to " + posX + ", " + posY);
             gameField.squares[posX, posY] = this;
         }
     }
@@ -67,7 +62,6 @@ public class Block : Square
     {
         if (gameField.PositionOnBoardExists(x, y) && gameField.squares[x, y] == null)
         {
-            Debug.Log(x + ", " + y + " should be true " + gameField.PositionOnBoardExists(x, y));
             return true;
         }
         return false;
@@ -75,10 +69,10 @@ public class Block : Square
     private PossibleMove CreatePosibleMoves(int x, int y)
     {
         Vector2 position = new Vector2(x, y);
-        PossibleMove possibleMove = Instantiate(gameField.possibleMovePrefab, position, Quaternion.identity);
+        PossibleMove possibleMove = 
+            Instantiate(gameField.possibleMovePrefab, position, Quaternion.identity);
         possibleMove.posX = x;
         possibleMove.posY = y;
-        Debug.Log(possibleMove.posX + ", " + possibleMove.posY + " is written to Possible Moves");
         return possibleMove;
     }
 }

@@ -6,11 +6,11 @@ public class BlockSpawner : MonoBehaviour
     [SerializeField] Marker markerPrefab;
     [SerializeField] int numberOfBlocks;
 
-    GameField grid;
+    GameField gameField;
  
     private void Start()
     {
-        grid = GetComponent<GameField>();
+        gameField = GetComponent<GameField>();
     }
     void Update()
     {
@@ -26,13 +26,13 @@ public class BlockSpawner : MonoBehaviour
         int counter = 0;
         while (counter < numberOfBlocks)
         {
-            int randomX = Random.Range(0, grid.width);
-            int randomY = Random.Range(0, grid.height);
-            if (grid.squares[randomX, randomY] == null)
+            int randomX = Random.Range(0, gameField.width);
+            int randomY = Random.Range(0, gameField.height);
+            if (gameField.squares[randomX, randomY] == null)
             {
                 Vector2 markerPos = new Vector2(randomX, randomY);
                 Marker marker = Instantiate(markerPrefab, markerPos, Quaternion.identity);
-                grid.squares[randomX, randomY] = marker;
+                gameField.squares[randomX, randomY] = marker;
                 marker.posX = randomX;
                 marker.posY = randomY;
                 marker.transform.parent = transform;
@@ -43,7 +43,7 @@ public class BlockSpawner : MonoBehaviour
 
     private void MakeBlocks()
     {
-        foreach (Square square in grid.squares)
+        foreach (Square square in gameField.squares)
         {
             if (square == null) continue;
             if (square is Marker)
@@ -52,7 +52,7 @@ public class BlockSpawner : MonoBehaviour
                 Block block = Instantiate(blockPrefab, blockPos, Quaternion.identity);
                 block.posX = square.posX;
                 block.posY = square.posY;
-                grid.squares[square.posX, square.posY] = block;
+                gameField.squares[square.posX, square.posY] = block;
                 Destroy(square.gameObject);
             }
         }

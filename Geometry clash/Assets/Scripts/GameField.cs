@@ -27,11 +27,11 @@ public class GameField : MonoBehaviour
             return true;
         }
         else {
-            return false; }
+            return false; 
+        }
     }
 
-    public void SetPositionEmpty(int x, int y) 
-    {
+    public void SetPositionEmpty(int x, int y) {
         squares[x, y] = null;
     }
 }
