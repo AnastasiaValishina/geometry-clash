@@ -18,12 +18,15 @@ public class Block : SquareBase
     public List<Block> followers;
     public Block head;
     public int prevX, prevY;
-    
+    public List<PossibleMove> possibleMoves;
+
     void Start()
     {
         gameField = FindObjectOfType<GameField>();
         blockType = BlockType.Single;
         followers = new List<Block>();
+        possibleMoves = new List<PossibleMove>();
+        FindAllNeighbours();
     }
     void Update()
     {
@@ -43,10 +46,10 @@ public class Block : SquareBase
 
     public void FindAllNeighbours()
     {
-        CheckForSingleNeighbours(posX - 1, posY);
-        CheckForSingleNeighbours(posX + 1, posY);
-        CheckForSingleNeighbours(posX, posY + 1);
-        CheckForSingleNeighbours(posX, posY - 1);
+        CheckForSingleNeighbour(posX - 1, posY);
+        CheckForSingleNeighbour(posX + 1, posY);
+        CheckForSingleNeighbour(posX, posY + 1);
+        CheckForSingleNeighbour(posX, posY - 1);
         if (followers.Count > 0) 
         { 
             blockType = BlockType.Head;
@@ -54,7 +57,7 @@ public class Block : SquareBase
         }
     }
 
-    public void CheckForSingleNeighbours(int x, int y)
+    public void CheckForSingleNeighbour(int x, int y)
     {
         if (gameField.PositionOnBoardExists(x, y) && gameField.squares[x, y] is Block)
         {
@@ -94,20 +97,11 @@ public class Block : SquareBase
 
     public void MakeRandomMove() // для Single и Head
     {
-        var possibleMoves = new List<PossibleMove>();
-        if (CheckMove(posX - 1, posY)) {
-            possibleMoves.Add(CreatePosibleMoves(posX - 1, posY));
-        }
-        if (CheckMove(posX + 1, posY)) {
-            possibleMoves.Add(CreatePosibleMoves(posX + 1, posY));
-        }
-        if (CheckMove(posX, posY + 1)) {
-            possibleMoves.Add(CreatePosibleMoves(posX, posY + 1));
-        }
-        if (CheckMove(posX, posY - 1)) {
-            possibleMoves.Add(CreatePosibleMoves(posX, posY - 1));
-        }
-
+        AddSquareIfEmpty(posX + 1, posY);
+        AddSquareIfEmpty(posX - 1, posY);
+        AddSquareIfEmpty(posX, posY + 1);
+        AddSquareIfEmpty(posX, posY - 1);
+       
         if (possibleMoves.Count > 0)
         {
             int randomIndex = Random.Range(0, possibleMoves.Count);
@@ -118,14 +112,27 @@ public class Block : SquareBase
 
             posX = possibleMoves[randomIndex].posX;
             posY = possibleMoves[randomIndex].posY;
-            foreach (var move in possibleMoves)
-            {
-                Destroy(move.gameObject);
-            }
-            possibleMoves.Clear();
+            ClearList();
             transform.position = new Vector2(posX, posY);
             gameField.squares[posX, posY] = this;
         }
+    }
+
+    private void AddSquareIfEmpty(int x, int y)
+    {
+        if (gameField.PositionOnBoardExists(x, y) && gameField.squares[x, y] == null)
+        {
+            possibleMoves.Add(CreatePosibleMoves(x, y));
+        }
+    }
+
+    private void ClearList()
+    {
+        foreach (var move in possibleMoves)
+        {
+            Destroy(move.gameObject);
+        }
+        possibleMoves.Clear();
     }
 
     private bool CheckMove(int x, int y)
