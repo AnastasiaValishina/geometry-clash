@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PossibleMove : Square
+public class PossibleMove : SquareBase
 {
 
 }

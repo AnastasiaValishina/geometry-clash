@@ -12,13 +12,13 @@ public class GameField : MonoBehaviour
     [SerializeField] public int width = 6;
     [SerializeField] public int height = 10;
 
-    public Square[,] squares;
+    public SquareBase[,] squares;
     public PossibleMove possibleMovePrefab;
     public GameState gameState;
 
     void Start()
     {
-        squares = new Square[width, height];
+        squares = new SquareBase[width, height];
     }
 
     public bool PositionOnBoardExists(int x, int y)

@@ -5,6 +5,8 @@ public class BlockSpawner : MonoBehaviour
     [SerializeField] Block blockPrefab;
     [SerializeField] Marker markerPrefab;
     [SerializeField] int numberOfBlocks;
+    [SerializeField] int totalNumber;
+    int blocks = 0;
 
     GameField gameField;
  
@@ -17,7 +19,11 @@ public class BlockSpawner : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             MakeBlocks();
-            SpawnMarkers();
+            if (blocks <= totalNumber)
+            {
+                SpawnMarkers();
+                blocks++;
+            }
         }
     }
 
@@ -43,7 +49,7 @@ public class BlockSpawner : MonoBehaviour
 
     private void MakeBlocks()
     {
-        foreach (Square square in gameField.squares)
+        foreach (SquareBase square in gameField.squares)
         {
             if (square == null) continue;
             if (square is Marker)
