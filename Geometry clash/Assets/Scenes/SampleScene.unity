@@ -189,6 +189,7 @@ MonoBehaviour:
   markerPrefab: {fileID: 2409847352698345950, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
     type: 3}
   numberOfBlocks: 1
+  totalNumber: 4
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

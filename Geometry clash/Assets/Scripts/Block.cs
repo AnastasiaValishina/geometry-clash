@@ -13,17 +13,19 @@ public enum BlockType
 public class Block : SquareBase
 {
     GameField gameField;
+    BlockSpawner spawner;
     public BlockType blockType;
     public bool isDebug = false;
     public List<Block> followers;
     public Block head;
     public int prevX, prevY;
     public List<PossibleMove> possibleMoves;
+    bool extraAdded = false;
 
     void Start()
     {
         gameField = FindObjectOfType<GameField>();
-        blockType = BlockType.Single;
+        spawner = FindObjectOfType<BlockSpawner>();
         followers = new List<Block>();
         possibleMoves = new List<PossibleMove>();
         FindAllNeighbours();
@@ -39,9 +41,50 @@ public class Block : SquareBase
                 if (blockType == BlockType.Head)
                 {
                     MoveBody();
+                    FindAllNeighbours();
+                    if (!extraAdded)
+                    {
+                        AddExtraBlock(followers[followers.Count - 1].posX, followers[followers.Count - 1].posY);
+                        extraAdded = true;
+                    }
                 }
             }
         }
+    }
+
+    void AddExtraBlock(int x, int y)
+    {
+        if (gameField.PositionOnBoardExists(x + 1, y) && gameField.squares[x + 1, y] == null)
+        {
+            SpawnBlock(x + 1, y);
+        }
+        else if (gameField.PositionOnBoardExists(x - 1, y) && gameField.squares[x - 1, y] == null)
+        {
+            SpawnBlock(x - 1, y);
+        }
+        else if (gameField.PositionOnBoardExists(x, y + 1) && gameField.squares[x, y + 1] == null)
+        {
+            SpawnBlock(x, y + 1);
+        }
+        else if (gameField.PositionOnBoardExists(x, y - 1) && gameField.squares[x, y - 1] == null)
+        {
+            SpawnBlock(x, y - 1);
+        }
+        else
+        {
+            Debug.Log("Extra block not added");
+        }
+    }
+
+    private void SpawnBlock(int x, int y)
+    {
+        Block block = spawner.CreateBlockAt(x, y);
+        followers.Add(block);
+        block.blockType = BlockType.Body;
+        block.head = this;
+        block.GetComponent<SpriteRenderer>().color = Color.white;
+        block.name = "Extra";
+        Debug.Log(block.blockType + " should be body 0");
     }
 
     public void FindAllNeighbours()
@@ -50,7 +93,7 @@ public class Block : SquareBase
         CheckForSingleNeighbour(posX + 1, posY);
         CheckForSingleNeighbour(posX, posY + 1);
         CheckForSingleNeighbour(posX, posY - 1);
-        if (followers.Count > 0) 
+        if (followers.Count > 0 && blockType == BlockType.Single) 
         { 
             blockType = BlockType.Head;
             GetComponent<SpriteRenderer>().color = Color.black;
@@ -67,6 +110,7 @@ public class Block : SquareBase
                 followers.Add(block);
                 block.blockType = BlockType.Body;
                 block.head = this;
+                block.GetComponent<SpriteRenderer>().color = Color.blue;
             }
         }
     }

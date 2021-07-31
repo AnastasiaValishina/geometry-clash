@@ -18,7 +18,7 @@ public class BlockSpawner : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
-            MakeBlocks();
+            TurnMarkersToBlocks();
             if (blocks <= totalNumber)
             {
                 SpawnMarkers();
@@ -47,7 +47,7 @@ public class BlockSpawner : MonoBehaviour
         }
     }
 
-    private void MakeBlocks()
+    private void TurnMarkersToBlocks()
     {
         foreach (SquareBase square in gameField.squares)
         {
@@ -62,5 +62,15 @@ public class BlockSpawner : MonoBehaviour
                 Destroy(square.gameObject);
             }
         }
+    }
+
+    public Block CreateBlockAt(int x, int y)
+    {
+        Vector2 blockPos = new Vector2(x, y);
+        Block block = Instantiate(blockPrefab, blockPos, Quaternion.identity);
+        block.posX = x;
+        block.posY = y;
+        gameField.squares[x, y] = block;
+        return block;
     }
 }
