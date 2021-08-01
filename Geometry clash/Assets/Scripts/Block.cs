@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,41 +53,6 @@ public class Block : SquareBase
         }
     }
 
-    void AddExtraBlock(int x, int y)
-    {
-        if (gameField.PositionOnBoardExists(x + 1, y) && gameField.squares[x + 1, y] == null)
-        {
-            SpawnBlock(x + 1, y);
-        }
-        else if (gameField.PositionOnBoardExists(x - 1, y) && gameField.squares[x - 1, y] == null)
-        {
-            SpawnBlock(x - 1, y);
-        }
-        else if (gameField.PositionOnBoardExists(x, y + 1) && gameField.squares[x, y + 1] == null)
-        {
-            SpawnBlock(x, y + 1);
-        }
-        else if (gameField.PositionOnBoardExists(x, y - 1) && gameField.squares[x, y - 1] == null)
-        {
-            SpawnBlock(x, y - 1);
-        }
-        else
-        {
-            Debug.Log("Extra block not added");
-        }
-    }
-
-    private void SpawnBlock(int x, int y)
-    {
-        Block block = spawner.CreateBlockAt(x, y);
-        followers.Add(block);
-        block.blockType = BlockType.Body;
-        block.head = this;
-        block.GetComponent<SpriteRenderer>().color = Color.white;
-        block.name = "Extra";
-        Debug.Log(block.blockType + " should be body 0");
-    }
-
     public void FindAllNeighbours()
     {
         CheckForSingleNeighbour(posX - 1, posY);
@@ -105,6 +71,13 @@ public class Block : SquareBase
         if (gameField.PositionOnBoardExists(x, y) && gameField.squares[x, y] is Block)
         {
             Block block = gameField.squares[x, y].GetComponent<Block>();
+
+    //check for single neighbours 
+    //single - single done
+    //head - single done
+    //head - head done
+    //head - body
+    //body - body
             if (block.blockType == BlockType.Single)
             {
                 followers.Add(block);
@@ -112,7 +85,71 @@ public class Block : SquareBase
                 block.head = this;
                 block.GetComponent<SpriteRenderer>().color = Color.blue;
             }
+
+    // check for other snakes
+            else if (block.blockType == BlockType.Head)
+            {
+                // проверить длинну
+                if (followers.Count > block.followers.Count)
+                {
+                    // голову добавляем в список
+                    followers.Add(block);
+                    // объединяем списки
+                    followers.AddRange(block.followers);
+                    // назначаем новую голову                    
+                    block.blockType = BlockType.Body;
+                    block.head = this;    
+                    foreach (Block b in block.followers) { b.head = this; }
+                    block.followers.Clear();
+                }
+                else
+                {
+                    // голову добавляем в список
+                    block.followers.Add(this);
+                    // объединяем списки
+                    block.followers.AddRange(followers);
+                    // назначаем новую голову                    
+                    blockType = BlockType.Body;
+                    head = block;
+                    foreach (Block b in followers) { b.head = block; }
+                    followers.Clear();
+                }
+            }
         }
+    }
+
+    void AddExtraBlock(int x, int y)
+    {
+        if (gameField.PositionOnBoardExists(x + 1, y) && gameField.squares[x + 1, y] == null)
+        {
+            CreateBlock(x + 1, y);
+        }
+        else if (gameField.PositionOnBoardExists(x - 1, y) && gameField.squares[x - 1, y] == null)
+        {
+            CreateBlock(x - 1, y);
+        }
+        else if (gameField.PositionOnBoardExists(x, y + 1) && gameField.squares[x, y + 1] == null)
+        {
+            CreateBlock(x, y + 1);
+        }
+        else if (gameField.PositionOnBoardExists(x, y - 1) && gameField.squares[x, y - 1] == null)
+        {
+            CreateBlock(x, y - 1);
+        }
+        else
+        {
+            Debug.Log("Extra block not added");
+        }
+    }
+
+    private void CreateBlock(int x, int y)
+    {
+        Block block = spawner.SpawnBlockAt(x, y);
+        followers.Add(block);
+        block.blockType = BlockType.Body;
+        block.head = this;
+        block.GetComponent<SpriteRenderer>().color = Color.yellow;
+        block.name = "Extra";
     }
 
     public void MoveBody()

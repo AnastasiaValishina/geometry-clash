@@ -64,7 +64,7 @@ public class BlockSpawner : MonoBehaviour
         }
     }
 
-    public Block CreateBlockAt(int x, int y)
+    public Block SpawnBlockAt(int x, int y)
     {
         Vector2 blockPos = new Vector2(x, y);
         Block block = Instantiate(blockPrefab, blockPos, Quaternion.identity);
