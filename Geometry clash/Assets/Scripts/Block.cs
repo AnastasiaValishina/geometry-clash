@@ -76,6 +76,7 @@ public class Block : SquareBase
     //single - single done
     //head - single done
     //head - head done
+    //single - body
     //head - body
     //body - body
             if (block.blockType == BlockType.Single)
@@ -86,24 +87,32 @@ public class Block : SquareBase
                 block.GetComponent<SpriteRenderer>().color = Color.blue;
             }
 
-    // check for other snakes
-            else if (block.blockType == BlockType.Head)
+            // check for other snakes
+            else if (block.blockType == BlockType.Head && blockType == BlockType.Head)
             {
                 // проверить длинну
                 if (followers.Count > block.followers.Count)
                 {
+                    Debug.Log("Joins " + followers.Count + " + " + block.followers.Count);
+
                     // голову добавляем в список
                     followers.Add(block);
+                    Block lastBlock = followers[followers.Count - 1];
                     // объединяем списки
                     followers.AddRange(block.followers);
                     // назначаем новую голову                    
                     block.blockType = BlockType.Body;
-                    block.head = this;    
-                    foreach (Block b in block.followers) { b.head = this; }
+                    block.head = this;
+                    foreach (Block b in block.followers) { b.head = this;
+                        b.GetComponent<SpriteRenderer>().color = Color.yellow;
+                    }
                     block.followers.Clear();
+                    OrderNewFollowers(followers, lastBlock);
+                    block.GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
                 else
                 {
+                    Debug.Log("Joins" + block.followers.Count + " + " + followers.Count);
                     // голову добавляем в список
                     block.followers.Add(this);
                     // объединяем списки
@@ -111,11 +120,55 @@ public class Block : SquareBase
                     // назначаем новую голову                    
                     blockType = BlockType.Body;
                     head = block;
-                    foreach (Block b in followers) { b.head = block; }
+                    block.GetComponent<SpriteRenderer>().color = Color.yellow;
+                    foreach (Block b in followers) { b.head = block; 
+                        b.GetComponent<SpriteRenderer>().color = Color.yellow; }
+
                     followers.Clear();
+                    OrderNewFollowers(block.followers, block.followers[followers.Count - 1]);             
                 }
             }
         }
+    }
+
+    void OrderNewFollowers(List<Block> followers, Block lastBlock)
+    {
+        for (int b = followers.IndexOf(lastBlock); b < followers.Count; b++)
+        {
+            if (gameField.PositionOnBoardExists(lastBlock.posX, lastBlock.posY + 1) &&
+                gameField.squares[lastBlock.posX, lastBlock.posY + 1] == null)
+            {
+                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX, lastBlock.posY + 1);
+            }
+            else if (gameField.PositionOnBoardExists(lastBlock.posX, lastBlock.posY - 1) &&
+                     gameField.squares[lastBlock.posX, lastBlock.posY - 1] == null)
+            {
+                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX, lastBlock.posY - 1);
+            }
+            else if (gameField.PositionOnBoardExists(lastBlock.posX + 1, lastBlock.posY) &&
+                     gameField.squares[lastBlock.posX + 1, lastBlock.posY] == null)
+            {
+                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX + 1, lastBlock.posY);
+            }
+            else if (gameField.PositionOnBoardExists(lastBlock.posX - 1, lastBlock.posY) &&
+                     gameField.squares[lastBlock.posX - 1, lastBlock.posY] == null)
+            {
+                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX - 1, lastBlock.posY);
+            }
+            else { Debug.Log("No place to move"); }
+        }
+
+    }
+
+    private void MoveBlockTo(Block block, int newX, int newY)
+    {
+        gameField.SetPositionEmpty(block.posX, block.posY);
+        block.prevX = block.posX;
+        block.prevY = block.posY;
+        block.posX = newX;
+        block.posY = newY;
+        block.transform.position = new Vector2(block.posX, block.posY);
+        gameField.squares[block.posX, block.posY] = block;
     }
 
     void AddExtraBlock(int x, int y)
@@ -148,31 +201,18 @@ public class Block : SquareBase
         followers.Add(block);
         block.blockType = BlockType.Body;
         block.head = this;
-        block.GetComponent<SpriteRenderer>().color = Color.yellow;
         block.name = "Extra";
     }
 
     public void MoveBody()
     {
         // первый боди встает на место головы
-        gameField.SetPositionEmpty(followers[0].posX, followers[0].posY);
-        followers[0].prevX = followers[0].posX;
-        followers[0].prevY = followers[0].posY;
-        followers[0].posX = prevX;
-        followers[0].posY = prevY;
-        followers[0].transform.position = new Vector2(followers[0].posX, followers[0].posY);
-        gameField.squares[followers[0].posX, followers[0].posY] = followers[0];
+        MoveBlockTo(followers[0], prevX, prevY);
 
         if (followers.Count < 1) return; 
         for (int b = 1; b < followers.Count; b++)
         {
-            gameField.SetPositionEmpty(followers[b].posX, followers[b].posY);
-            followers[b].prevX = followers[b].posX;
-            followers[b].prevY = followers[b].posY;
-            followers[b].posX = followers[b-1].prevX;
-            followers[b].posY = followers[b-1].prevY;
-            followers[b].transform.position = new Vector2(followers[b].posX, followers[b].posY);
-            gameField.squares[followers[b].posX, followers[b].posY] = followers[b];
+            MoveBlockTo(followers[b], followers[b - 1].prevX, followers[b - 1].prevY);
         }
     }
 
