@@ -74,9 +74,9 @@ public class Block : SquareBase
 
     //check for single neighbours 
     //single - single done
-    //head - single done
-    //head - head done
-    //single - body
+    //head - single   done
+    //head - head     done
+    //single - body   done
     //head - body
     //body - body
             if (block.blockType == BlockType.Single)
@@ -86,15 +86,22 @@ public class Block : SquareBase
                 block.head = this;
                 block.GetComponent<SpriteRenderer>().color = Color.blue;
             }
+            else if (blockType == BlockType.Single && block.blockType == BlockType.Body)
+            {
+                block.head.followers.Add(this);
+                blockType = BlockType.Body;
+                head = block.head;
+                GetComponent<SpriteRenderer>().color = Color.cyan;
+                OrderNewFollowers(block.head.followers, block.head.followers[block.head.followers.Count - 2]);
+            }
 
-            // check for other snakes
+
+            //check for other snakes
             else if (block.blockType == BlockType.Head && blockType == BlockType.Head)
             {
                 // проверить длинну
                 if (followers.Count > block.followers.Count)
                 {
-                    Debug.Log("Joins " + followers.Count + " + " + block.followers.Count);
-
                     // голову добавляем в список
                     followers.Add(block);
                     Block lastBlock = followers[followers.Count - 1];
@@ -103,7 +110,9 @@ public class Block : SquareBase
                     // назначаем новую голову                    
                     block.blockType = BlockType.Body;
                     block.head = this;
-                    foreach (Block b in block.followers) { b.head = this;
+                    foreach (Block b in block.followers)
+                    {
+                        b.head = this;
                         b.GetComponent<SpriteRenderer>().color = Color.yellow;
                     }
                     block.followers.Clear();
@@ -112,7 +121,6 @@ public class Block : SquareBase
                 }
                 else
                 {
-                    Debug.Log("Joins" + block.followers.Count + " + " + followers.Count);
                     // голову добавляем в список
                     block.followers.Add(this);
                     // объединяем списки
@@ -121,11 +129,13 @@ public class Block : SquareBase
                     blockType = BlockType.Body;
                     head = block;
                     block.GetComponent<SpriteRenderer>().color = Color.yellow;
-                    foreach (Block b in followers) { b.head = block; 
-                        b.GetComponent<SpriteRenderer>().color = Color.yellow; }
-
+                    foreach (Block b in followers)
+                    {
+                        b.head = block;
+                        b.GetComponent<SpriteRenderer>().color = Color.yellow;
+                    }
                     followers.Clear();
-                    OrderNewFollowers(block.followers, block.followers[followers.Count - 1]);             
+                    OrderNewFollowers(block.followers, block.followers[block.followers.Count - 1]);
                 }
             }
         }
@@ -133,31 +143,30 @@ public class Block : SquareBase
 
     void OrderNewFollowers(List<Block> followers, Block lastBlock)
     {
-        for (int b = followers.IndexOf(lastBlock); b < followers.Count; b++)
+        for (int b = followers.IndexOf(lastBlock); b < followers.Count - 1; b++)
         {
-            if (gameField.PositionOnBoardExists(lastBlock.posX, lastBlock.posY + 1) &&
-                gameField.squares[lastBlock.posX, lastBlock.posY + 1] == null)
+            if (gameField.PositionOnBoardExists(followers[b].posX, followers[b].posY + 1) &&
+                gameField.squares[followers[b].posX, followers[b].posY + 1] == null)
             {
-                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX, lastBlock.posY + 1);
+                MoveBlockTo(followers[b + 1], followers[b].posX, followers[b].posY + 1);
             }
-            else if (gameField.PositionOnBoardExists(lastBlock.posX, lastBlock.posY - 1) &&
-                     gameField.squares[lastBlock.posX, lastBlock.posY - 1] == null)
+            else if (gameField.PositionOnBoardExists(followers[b].posX, followers[b].posY - 1) &&
+                        gameField.squares[followers[b].posX, followers[b].posY - 1] == null)
             {
-                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX, lastBlock.posY - 1);
+                MoveBlockTo(followers[b + 1], followers[b].posX, followers[b].posY - 1);
             }
-            else if (gameField.PositionOnBoardExists(lastBlock.posX + 1, lastBlock.posY) &&
-                     gameField.squares[lastBlock.posX + 1, lastBlock.posY] == null)
+            else if (gameField.PositionOnBoardExists(followers[b].posX + 1, followers[b].posY) &&
+                        gameField.squares[followers[b].posX + 1, followers[b].posY] == null)
             {
-                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX + 1, lastBlock.posY);
+                MoveBlockTo(followers[b + 1], followers[b].posX + 1, followers[b].posY);
             }
-            else if (gameField.PositionOnBoardExists(lastBlock.posX - 1, lastBlock.posY) &&
-                     gameField.squares[lastBlock.posX - 1, lastBlock.posY] == null)
+            else if (gameField.PositionOnBoardExists(followers[b].posX - 1, followers[b].posY) &&
+                        gameField.squares[followers[b].posX - 1, followers[b].posY] == null)
             {
-                MoveBlockTo(followers[followers.IndexOf(lastBlock) + 1], lastBlock.posX - 1, lastBlock.posY);
+                MoveBlockTo(followers[b + 1], followers[b].posX - 1, followers[b].posY);
             }
-            else { Debug.Log("No place to move"); }
+            else { Debug.Log("No place to move"); }            
         }
-
     }
 
     private void MoveBlockTo(Block block, int newX, int newY)
