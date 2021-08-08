@@ -189,7 +189,7 @@ MonoBehaviour:
   markerPrefab: {fileID: 2409847352698345950, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
     type: 3}
   numberOfBlocks: 1
-  totalNumber: 10
+  totalNumber: 50
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,8 +410,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 11
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -435,7 +435,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 8, z: -18.5}
+  m_LocalPosition: {x: 4, y: 8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -688,7 +688,7 @@ PrefabInstance:
     - target: {fileID: 586976684294929432, guid: 9cd070cd0bd53e5409b8986c3023e72d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.39
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 586976684294929432, guid: 9cd070cd0bd53e5409b8986c3023e72d,
         type: 3}
@@ -730,10 +730,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3410035233305519658, guid: 9cd070cd0bd53e5409b8986c3023e72d,
+        type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410035233305519658, guid: 9cd070cd0bd53e5409b8986c3023e72d,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8458512177829015883, guid: 9cd070cd0bd53e5409b8986c3023e72d,
         type: 3}
       propertyPath: m_Name
       value: Cannon
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3410035233305519658, guid: 9cd070cd0bd53e5409b8986c3023e72d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9cd070cd0bd53e5409b8986c3023e72d, type: 3}
