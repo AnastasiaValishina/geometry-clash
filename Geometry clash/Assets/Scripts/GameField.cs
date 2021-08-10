@@ -23,15 +23,15 @@ public class GameField : MonoBehaviour
 
     public bool PositionOnBoardExists(int x, int y)
     {
-        if (x >= 0 && y >= 0 && x < width && y < height){
-            return true;
-        }
-        else {
-            return false; 
-        }
+        return x >= 0 && y >= 0 && x < width && y < height; 
     }
 
     public void SetPositionEmpty(int x, int y) {
         squares[x, y] = null;
+    }
+
+    private bool CheckMove(int x, int y)
+    {
+        return PositionOnBoardExists(x, y) && squares[x, y] == null;
     }
 }

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 261837876}
   - component: {fileID: 261837875}
   - component: {fileID: 261837877}
+  - component: {fileID: 261837878}
   m_Layer: 0
   m_Name: GameField
   m_TagString: Untagged
@@ -189,7 +190,20 @@ MonoBehaviour:
   markerPrefab: {fileID: 2409847352698345950, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
     type: 3}
   numberOfBlocks: 1
-  totalNumber: 50
+  totalNumber: 16
+--- !u!114 &261837878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261837874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42bf4f852b6717942afcd909bef8e28b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allBlocks: []
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

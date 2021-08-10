@@ -9,14 +9,16 @@ public class BlockSpawner : MonoBehaviour
     int blocks = 0;
 
     GameField gameField;
+    BlockManager blockManager;
  
     private void Start()
     {
         gameField = GetComponent<GameField>();
+        blockManager = GetComponent<BlockManager>();
     }
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
             TurnMarkersToBlocks();
             if (blocks <= totalNumber)
@@ -59,6 +61,7 @@ public class BlockSpawner : MonoBehaviour
                 block.posX = square.posX;
                 block.posY = square.posY;
                 gameField.squares[square.posX, square.posY] = block;
+                blockManager.allBlocks.Add(block);
                 Destroy(square.gameObject);
             }
         }
@@ -71,6 +74,8 @@ public class BlockSpawner : MonoBehaviour
         block.posX = x;
         block.posY = y;
         gameField.squares[x, y] = block;
+        blockManager.allBlocks.Add(block);
+
         return block;
     }
 }
