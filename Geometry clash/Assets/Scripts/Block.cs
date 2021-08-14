@@ -11,6 +11,7 @@ public enum BlockType
 public class Block : SquareBase
 {
     GameField gameField;
+    BlockManager blockManager;
     public BlockType blockType;
     public bool isDebug = false;
     public List<Block> followers;
@@ -18,12 +19,14 @@ public class Block : SquareBase
     public int prevX, prevY;
     public List<PossibleMove> possibleMoves;
     public bool extraAdded = false;
+    public int health = 1;
 
     void Start()
     {
         gameField = FindObjectOfType<GameField>();
         followers = new List<Block>();
-        possibleMoves = new List<PossibleMove>();        
+        possibleMoves = new List<PossibleMove>();
+        blockManager = FindObjectOfType<BlockManager>();
     }
     void Update()
     {
@@ -78,5 +81,54 @@ public class Block : SquareBase
         possibleMove.posX = x;
         possibleMove.posY = y;
         return possibleMove;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destroy(collision.gameObject);
+        health -= 1;
+        if (health <= 0)
+        {
+
+        }
+        if (blockType == BlockType.Single)
+        {
+            gameField.SetPositionEmpty(posX, posY);
+            blockManager.allBlocks.Remove(this);
+            Destroy(gameObject);
+        }
+        else if (blockType == BlockType.Head)
+        {
+            gameField.SetPositionEmpty(posX, posY);
+            Block newHead = followers[0];
+            newHead.blockType = BlockType.Head;
+            followers.RemoveAt(0);
+            newHead.followers = followers;
+            foreach (Block b in newHead.followers)
+            {
+                b.head = newHead;
+            }
+            blockManager.allBlocks.Remove(this);
+            Destroy(gameObject);
+        }
+        else if (blockType == BlockType.Body)
+        {
+            gameField.SetPositionEmpty(posX, posY);
+            blockManager.allBlocks.Remove(this);
+            var index = head.followers.IndexOf(this);
+            Block myHead = head;
+            Debug.Log("index " + index);
+            for (int i = index; i < myHead.followers.Count; i++)
+            {
+                myHead.followers[i].blockType = BlockType.Single;
+                myHead.followers[i].head = null;
+            }
+            myHead.followers.RemoveRange(index, myHead.followers.Count - index);
+            if (myHead.followers.Count < 1)
+            {
+                myHead.blockType = BlockType.Single;
+            }
+            Destroy(gameObject);
+        }
     }
 }

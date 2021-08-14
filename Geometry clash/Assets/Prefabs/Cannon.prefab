@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 586976684294929432}
   - component: {fileID: 6212509514145017304}
-  - component: {fileID: 3410035233305519658}
   - component: {fileID: 1182944790}
   - component: {fileID: 6892141974706034056}
+  - component: {fileID: 1362639624031635820}
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
@@ -85,27 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &3410035233305519658
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8458512177829015883}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &1182944790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,3 +123,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.39, y: 2.53}
   m_EdgeRadius: 0
+--- !u!114 &1362639624031635820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8458512177829015883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9609cd626e43b4eba5b9aed0fa3551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: -3387108310284695639, guid: af099fee6b34e464e9c03368165e0cf7,
+    type: 3}
