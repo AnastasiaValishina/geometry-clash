@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class BlockManager : MonoBehaviour
@@ -21,16 +22,17 @@ public class BlockManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
-        {
-            UpdateAllBlocks();
-        }
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    MoveAllBlocks();
+        //}
     }
 
-    void UpdateAllBlocks()
+    public void MoveAllBlocks()
     {
         for (int i = 0; i < allBlocks.Count; i++)
         {
+            //allBlocks[i].UpdateColors();
             if (allBlocks[i].blockType == BlockType.Single || allBlocks[i].blockType == BlockType.Head)
             {
                 allBlocks[i].MakeRandomMove();
@@ -46,6 +48,7 @@ public class BlockManager : MonoBehaviour
                     }
                 }
             }
+            allBlocks[i].UpdateColors();
         }
     }
 
@@ -58,7 +61,7 @@ public class BlockManager : MonoBehaviour
         if (block.followers.Count > 0 && block.blockType == BlockType.Single)
         {
             block.blockType = BlockType.Head;
-            block.GetComponent<SpriteRenderer>().color = Color.black;
+            block.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)); ;
         }
     }
 
@@ -172,14 +175,20 @@ public class BlockManager : MonoBehaviour
 
     void MoveBody(Block headBlock)
     {
-        // первый боди встает на место головы
-        MoveBlockTo(headBlock.followers[0], headBlock.prevX, headBlock.prevY);
-
-        if (headBlock.followers.Count < 1) return;
-        for (int b = 1; b < headBlock.followers.Count; b++)
+        try
         {
-            MoveBlockTo(headBlock.followers[b], headBlock.followers[b - 1].prevX, headBlock.followers[b - 1].prevY);
+            // первый боди встает на место головы
+            MoveBlockTo(headBlock.followers[0], headBlock.prevX, headBlock.prevY);
+            if (headBlock.followers.Count <= 1) return;
+            for (int b = 1; b < headBlock.followers.Count; b++)
+            {
+                MoveBlockTo(headBlock.followers[b], headBlock.followers[b - 1].prevX, headBlock.followers[b - 1].prevY);
+            }
         }
+        catch
+        {
+            Debug.Log("Tried to move body of " + headBlock.name);
+        }        
     }
 
     void AddExtraBlock(Block lastBlock, int x, int y)

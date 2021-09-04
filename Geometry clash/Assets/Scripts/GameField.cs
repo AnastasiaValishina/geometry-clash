@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
-public enum GameState
-{
-    Player,
-    Appear,
-    Move,
-}
 public class GameField : MonoBehaviour
 {
     [SerializeField] public int width = 6;
@@ -14,7 +8,6 @@ public class GameField : MonoBehaviour
 
     public SquareBase[,] squares;
     public PossibleMove possibleMovePrefab;
-    public GameState gameState;
 
     void Start()
     {

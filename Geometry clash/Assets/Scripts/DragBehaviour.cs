@@ -27,7 +27,7 @@ public class DragBehaviour : MonoBehaviour
         int xPos = Mathf.RoundToInt(mousePosition.x);
         if (xPos >= -1 && xPos <= 9)
         {
-            transform.position = new Vector2(xPos - deltaX, -2);
+            transform.position = new Vector2(xPos - deltaX, -4);
         }
     }
 

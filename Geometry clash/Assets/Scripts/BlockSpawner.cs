@@ -18,18 +18,18 @@ public class BlockSpawner : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            TurnMarkersToBlocks();
-            if (blocks <= totalNumber)
-            {
-                SpawnMarkers();
-                blocks++;
-            }
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    TurnMarkersToBlocks();
+        //    if (blocks <= totalNumber)
+        //    {
+        //        SpawnMarkers();
+        //        blocks++;
+        //    }
+        //}
     }
 
-    private void SpawnMarkers()
+    public void SpawnMarkers()
     {
         int counter = 0;
         while (counter < numberOfBlocks)
@@ -49,7 +49,7 @@ public class BlockSpawner : MonoBehaviour
         }
     }
 
-    private void TurnMarkersToBlocks()
+    public void TurnMarkersToBlocks()
     {
         foreach (SquareBase square in gameField.squares)
         {
@@ -63,6 +63,8 @@ public class BlockSpawner : MonoBehaviour
                 gameField.squares[square.posX, square.posY] = block;
                 blockManager.allBlocks.Add(block);
                 Destroy(square.gameObject);
+                block.name = blocks.ToString();
+                blocks++;
             }
         }
     }
@@ -75,7 +77,8 @@ public class BlockSpawner : MonoBehaviour
         block.posY = y;
         gameField.squares[x, y] = block;
         blockManager.allBlocks.Add(block);
-
+        block.name = blocks.ToString();
+        blocks++;
         return block;
     }
 }

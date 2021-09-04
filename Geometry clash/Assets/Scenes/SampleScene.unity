@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 261837875}
   - component: {fileID: 261837877}
   - component: {fileID: 261837878}
+  - component: {fileID: 261837879}
   m_Layer: 0
   m_Name: GameField
   m_TagString: Untagged
@@ -155,10 +156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 9
-  height: 19
+  height: 17
   possibleMovePrefab: {fileID: 2846053081504668632, guid: c1c23e10732d86b4f92e7b3ebf1e2dd5,
     type: 3}
-  gameState: 0
 --- !u!4 &261837876
 Transform:
   m_ObjectHideFlags: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
     type: 3}
   markerPrefab: {fileID: 2409847352698345950, guid: c79c8c471f1f95d49b8d27c30d1e82e8,
     type: 3}
-  numberOfBlocks: 1
+  numberOfBlocks: 2
   totalNumber: 16
 --- !u!114 &261837878
 MonoBehaviour:
@@ -204,6 +204,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allBlocks: []
+--- !u!114 &261837879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261837874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad6eb30844367c409602c672491b443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameState: 0
+--- !u!114 &549339470 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1362639624031635820, guid: 9cd070cd0bd53e5409b8986c3023e72d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5173650821722812330}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9609cd626e43b4eba5b9aed0fa3551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,10 +355,10 @@ RectTransform:
   m_Father: {fileID: 1908618205}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -910}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 270}
+  m_SizeDelta: {x: -400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &712399874
 MonoBehaviour:
@@ -416,7 +441,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 712399874}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 549339470}
+        m_TargetAssemblyTypeName: Gun, Assembly-CSharp
+        m_MethodName: Shoot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +507,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11
+  orthographic size: 13.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -645,7 +682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1908618202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -747,7 +784,7 @@ PrefabInstance:
     - target: {fileID: 586976684294929432, guid: 9cd070cd0bd53e5409b8986c3023e72d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 586976684294929432, guid: 9cd070cd0bd53e5409b8986c3023e72d,
         type: 3}

@@ -1,21 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
     [SerializeField] Bullet bulletPrefab;
-    void Start()
+    public bool canShoot;
+    Game game;
+
+    private void Start()
     {
-        
+        game = FindObjectOfType<Game>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (game.gameState == GameState.Player && canShoot)
         {
             Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            canShoot = false;
+            game.SetGameState(GameState.Game);
         }
     }
 }
